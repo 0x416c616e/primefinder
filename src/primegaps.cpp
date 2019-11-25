@@ -55,7 +55,7 @@ int main() {
 		string leftOffAtStr;
 		getline(leftOffCount, leftOffAtStr);
 		leftOffAtInt = stoi(leftOffAtStr);
-		cout << "left off at int: " << leftOffAtInt << endl;
+		cout << "number of previously completed runs: " << leftOffAtInt << endl;
 		leftOffCount.close();
 
 		//check that gaps.csv file exists
@@ -99,7 +99,7 @@ int main() {
 
         ofstream appendFile;
         appendFile.open(filename.c_str(), ios_base::app);
-        cout << "file exists, appending prime gaps..." << endl;
+        cout << "file exists, calculating prime gaps..." << endl;
         unsigned long long old_prime;
         unsigned long long current_prime = 2;
         unsigned long long num = 3;
@@ -107,20 +107,22 @@ int main() {
 
         if (leftOffAtInt > 0) {
         	//TO DO: get last prime from previous CSV and store as current_prime
-        	num = leftOffAtInt * ceiling;
         	ceiling += (leftOffAtInt * ceiling);
-        	cout << "File size: " << sizeOfFile << endl;
-        	cout << "num: " << num << endl;
-        	cout << "ceiling: " << ceiling << endl;
+        	num = ceiling - sizeOfFile;
         }
+
+    	cout << "File size: " << sizeOfFile << endl;
+    	cout << "num: " << num << endl;
+    	cout << "ceiling: " << ceiling << endl;
 
         //putting prime gaps into a CSV
         cout << "Progress:" << endl;
              //  [========================================]
-        cout << "0                   50                  100" << endl;
-        cout << "v                   v                   v";
+        cout << "0                   50                   100" << endl;
+        cout << "v                   v                    v";
         cout << "\r[";
         cout.flush();
+
         for (unsigned long long i = num; i < ceiling; i++) {
             if (numIsPrime(i)) {
                 old_prime = current_prime;
@@ -150,7 +152,18 @@ int main() {
         auto endingTime = chrono::system_clock::now();
         time_t endTimeValue = chrono::system_clock::to_time_t(endingTime);
         cout << "Finished at: " << ctime(&endTimeValue);
+        cout << "----------------------------------------" << endl;
+        //TO-DO: indicate if was completed fully
+        //make a text file called run_completed.txt
+        //and at the beginning of the program, it will need to
+        //check if the last run was completed or not
+        //because it could be interrupted before being finished, or
+        //the device it's on could be rebooted, or there could be
+        //a power outage or something
 
+        //TO-DO:
+        //make a separate shell script or cpp program that can just tell if the program wasn't completed in its last run
+        //and then fixes it accordingly
     } else {
         cout << "error: missing file" << endl;
     }
