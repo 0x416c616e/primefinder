@@ -86,7 +86,6 @@ int main() {
 				newFile << "";
 				fileExists = newFile.good();
 				newFile.close();
-
 			}
 			myFile.close();
 	    }
@@ -95,19 +94,53 @@ int main() {
     //proceed if relevant .dat file exists, count file exists, and count stuff was good
     //and if the filename was made successfully
     bool canProceed = fileExists && countExists && (leftOffAtInt != -1) && (filename != "");
+    //the above has an issue if you start a run but don't finish it
+    //the values will be 0, 1, 1, 1 for the booleans in that order
+
+    //this handles if the user used the run_continuously.sh script
+    //but then quit the program in the middle of a run
+    if (!fileExists) {
+        ifstream checkIfCompleted; //check if the last run was completed
+        checkIfCompleted.open("last_was_completed.txt");
+    	string completedStr;
+    	getline(checkIfCompleted, completedStr);
+    	checkIfCompleted.close();
+
+    	//what to do if the program was interrupted during the last run
+    	if (completedStr == "false") {
+    		canProceed = true;
+			ofstream newFile2;
+			newFile2.open(filename);
+			newFile2 << "";
+			fileExists = newFile2.good();
+			newFile2.close();
+			cout << "The last run was interrupted." << endl;
+			cout << "Program is now taking measures to resume from" << endl;
+			cout << "the last good checkpoint." << endl;
+    	} else {
+    		cout << "something went wrong" << endl;
+    		return 1;
+    	}
+    }
+
+    //======================================
+
+
+
+    //======================================
 
     if (canProceed){
 
         ofstream appendFile;
         appendFile.open(filename.c_str(), ios_base::app);
-        cout << "File exists, calculating prime gaps..." << endl;
+        cout << "Everything is fine" << endl;
+        cout << "Calculating prime gaps..." << endl;
         unsigned long long old_prime;
         unsigned long long current_prime = 2;
         unsigned long long num = 3;
         unsigned long long gap = 1;
 
         if (leftOffAtInt > 0) {
-        	//TO DO: get last prime from previous .dat and store as current_prime
         	ceiling += (leftOffAtInt * ceiling);
         	num = ceiling - sizeOfFile;
         	ifstream getLastPrime;
@@ -123,7 +156,16 @@ int main() {
     	cout << "Num: " << num << endl;
     	cout << "Ceiling: " << ceiling << endl;
 
-        //putting prime gaps into a .dat
+
+
+        //setting last_was_completed.txt to false
+		ofstream changeRunStatus;
+		changeRunStatus.open("last_was_completed.txt");
+		changeRunStatus << "false";
+		changeRunStatus.close();
+        cout << "Current run in progress..." << endl;
+
+    	//has an ASCII loading bar that moves to indicate progress
         cout << "Progress:" << endl;
              //  [========================================]
         cout << "0                   50                   100" << endl;
@@ -131,6 +173,8 @@ int main() {
         cout << "\r[";
         cout.flush();
 
+        //putting prime gaps into a .dat
+		//main prime gap loop
         for (unsigned long long i = num; i < ceiling; i++) {
         	//EDGE CASE for 2 because 2 is the 1st prime
         	//meaning it doesn't have a previous prime
@@ -151,45 +195,56 @@ int main() {
                 appendFile << ",";
                 appendFile << gap << endl;
             }
+            //moving the loading bar along
+            //to denote progress with the current run/batch
             if (i % (sizeOfFile/40) == 0) {
             	cout << "=";
             	cout.flush();
 			}
         }
+        //closing the loading bar
         cout << "=]" << endl;
         cout.flush();
+        //updating the text files that have status info
+        //this is the "checkpoint" functionality
+        //so the program can be run, quit abruptly, run again
+        //so instead of starting from scratch, you can always
+        //resume where you left off later
+        //but instead of writing every single single change, it's only once every 50k
+        //to reduce disk wear
+
+        //update count.txt
         ofstream changeCount;
         changeCount.open("count.txt");
         changeCount << leftOffAtInt + 1;
         changeCount.close();
+
+        //update lastprime.txt
         ofstream changeLastPrime;
         //lastprime means the last prime from the previous checkpoint
         changeLastPrime.open("lastprime.txt");
         changeLastPrime << current_prime;
         appendFile.close();
+
+        //update last_was_completed.txt
+        ofstream changeCompleted;
+        changeCompleted.open("last_was_completed.txt");
+        changeCompleted << "true";
+        changeCompleted.close();
+
+        //end time for run
         auto endingTime = chrono::system_clock::now();
         time_t endTimeValue = chrono::system_clock::to_time_t(endingTime);
         cout << "Finished at: " << ctime(&endTimeValue);
         cout << "----------------------------------------" << endl;
-        //TO-DO: indicate if was completed fully
-        //make a text file called run_completed.txt
-        //and at the beginning of the program, it will need to
-        //check if the last run was completed or not
-        //because it could be interrupted before being finished, or
-        //the device it's on could be rebooted, or there could be
-        //a power outage or something
 
-        //TO-DO:
-        //make a separate shell script or cpp program that can just tell if the program wasn't completed in its last run
-        //and then fixes it accordingly
-
-        //TO-DO:
-        //switch csv to .dat instead so that it will work better with gnuplot
-
-        //TO-DO:
-        //make a gnuplot script?
     } else {
         cout << "error: missing file" << endl;
+        cout << "debugging-related info:" << endl;
+        cout << "fileExists: " << fileExists << endl;
+		cout << "countExists: " << countExists << endl;
+		cout << "leftOffAtInt: " << (leftOffAtInt != -1) << endl;
+		cout << "filename: " << (filename != "") << endl;
     }
     return 0;
 }
