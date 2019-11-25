@@ -55,31 +55,32 @@ int main() {
 		string leftOffAtStr;
 		getline(leftOffCount, leftOffAtStr);
 		leftOffAtInt = stoi(leftOffAtStr);
-		cout << "number of previously completed runs: " << leftOffAtInt << endl;
+		cout << "Number of previously completed runs: " << leftOffAtInt << endl;
 		leftOffCount.close();
 
-		//check that gaps.csv file exists
+		//check that gaps.dat file exists
 	    filename += "gaps_";
 	    filename += leftOffAtStr;
-	    filename += ".csv";
-	    cout << "filename: " << filename << endl;
+	    filename += ".dat";
+	    cout << "Filename: " << filename << endl;
 
-	    //check if the program has completed at least one 1M CSV file
+	    //note: used to be .csv, but changed to .dat for the sake of gnuplot
+	    //check if the program has completed at least one 50k .DAT file
 	    if (leftOffAtInt == 0) {
-	    	//append to gaps_0.csv when it has never been made before
+	    	//append to gaps_0.dat when it has never been made before
 	    	ifstream appendFileExists;
 			appendFileExists.open(filename);
 			fileExists = appendFileExists.good();
 			appendFileExists.close();
 		//the else block here is for making new files once one has already been completed
 	    } else {
-	    	//make new csv files, such as for gaps_1.csv, gaps_2.csv, etc.
+	    	//make new .dat files, such as for gaps_1.dat, gaps_2.dat, etc.
 	    	ifstream myFile;
 			myFile.open(filename);
 			if (myFile.good()) {
-				cout << "can't make new file with filename: " << filename << endl;
+				cout << "Can't make new file with filename: " << filename << endl;
 			} else {
-				cout << "making new file: " << filename << endl;
+				cout << "Making new file: " << filename << endl;
 				ofstream newFile;
 				newFile.open(filename);
 				newFile << "";
@@ -91,7 +92,7 @@ int main() {
 	    }
     }
 
-    //proceed if relevant .csv file exists, count file exists, and count stuff was good
+    //proceed if relevant .dat file exists, count file exists, and count stuff was good
     //and if the filename was made successfully
     bool canProceed = fileExists && countExists && (leftOffAtInt != -1) && (filename != "");
 
@@ -99,31 +100,30 @@ int main() {
 
         ofstream appendFile;
         appendFile.open(filename.c_str(), ios_base::app);
-        cout << "file exists, calculating prime gaps..." << endl;
+        cout << "File exists, calculating prime gaps..." << endl;
         unsigned long long old_prime;
         unsigned long long current_prime = 2;
         unsigned long long num = 3;
         unsigned long long gap = 1;
 
         if (leftOffAtInt > 0) {
-        	//TO DO: get last prime from previous CSV and store as current_prime
+        	//TO DO: get last prime from previous .dat and store as current_prime
         	ceiling += (leftOffAtInt * ceiling);
         	num = ceiling - sizeOfFile;
         	ifstream getLastPrime;
         	getLastPrime.open("lastprime.txt");
         	string currentPrimeStr;
         	getline(getLastPrime, currentPrimeStr);
-        	cout << "currentPrimeStr: " << currentPrimeStr << endl;
         	current_prime = stoull(currentPrimeStr);
         	getLastPrime.close();
-        	cout << "current prime: " << current_prime << endl;
+        	cout << "Biggest prime from previous run: " << current_prime << endl;
         }
 
     	cout << "File size: " << sizeOfFile << endl;
-    	cout << "num: " << num << endl;
-    	cout << "ceiling: " << ceiling << endl;
+    	cout << "Num: " << num << endl;
+    	cout << "Ceiling: " << ceiling << endl;
 
-        //putting prime gaps into a CSV
+        //putting prime gaps into a .dat
         cout << "Progress:" << endl;
              //  [========================================]
         cout << "0                   50                   100" << endl;
@@ -132,14 +132,24 @@ int main() {
         cout.flush();
 
         for (unsigned long long i = num; i < ceiling; i++) {
+        	//EDGE CASE for 2 because 2 is the 1st prime
+        	//meaning it doesn't have a previous prime
+        	//to compare it to, so a prime gap is not possible
+        	//in this case, I am just putting 0 as the prime gap
+        	//because there is no previous value
+        	if (i == 3) {
+        		appendFile << 2;
+        		appendFile << ",";
+        		appendFile << 0 << endl;
+        	}
             if (numIsPrime(i)) {
                 old_prime = current_prime;
                 current_prime = i;
                 gap = current_prime - old_prime;
                 //each line contains x,y coordinates to be graphed
-                appendFile << gap;
+                appendFile << current_prime;
                 appendFile << ",";
-                appendFile << current_prime << endl;
+                appendFile << gap << endl;
             }
             if (i % (sizeOfFile/40) == 0) {
             	cout << "=";
@@ -174,8 +184,10 @@ int main() {
         //and then fixes it accordingly
 
         //TO-DO:
-        //make the shell script run either a finite number of times if the user passes an argument to it
-        //or infinitely if they don't
+        //switch csv to .dat instead so that it will work better with gnuplot
+
+        //TO-DO:
+        //make a gnuplot script?
     } else {
         cout << "error: missing file" << endl;
     }
