@@ -109,6 +109,14 @@ int main() {
         	//TO DO: get last prime from previous CSV and store as current_prime
         	ceiling += (leftOffAtInt * ceiling);
         	num = ceiling - sizeOfFile;
+        	ifstream getLastPrime;
+        	getLastPrime.open("lastprime.txt");
+        	string currentPrimeStr;
+        	getline(getLastPrime, currentPrimeStr);
+        	cout << "currentPrimeStr: " << currentPrimeStr << endl;
+        	current_prime = stoull(currentPrimeStr);
+        	getLastPrime.close();
+        	cout << "current prime: " << current_prime << endl;
         }
 
     	cout << "File size: " << sizeOfFile << endl;
@@ -164,6 +172,10 @@ int main() {
         //TO-DO:
         //make a separate shell script or cpp program that can just tell if the program wasn't completed in its last run
         //and then fixes it accordingly
+
+        //TO-DO:
+        //make the shell script run either a finite number of times if the user passes an argument to it
+        //or infinitely if they don't
     } else {
         cout << "error: missing file" << endl;
     }
