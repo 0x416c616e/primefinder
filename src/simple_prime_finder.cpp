@@ -13,10 +13,10 @@ bool numIsPrime(unsigned long long argNum){
 }
 
 int main() {
-	//finds primes in the first 10,000 positive natural numbers
+	//finds primes in the first 100,000 positive natural numbers
 	ofstream outputFile;
 	outputFile.open("output.dat");
-	for (unsigned long long i = 3; i < 100000; i++) {
+	for (unsigned long long i = 2; i < 100000; i++) {
 		if (numIsPrime(i)) {
 			outputFile << i << endl;
 		}
