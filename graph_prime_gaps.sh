@@ -8,7 +8,7 @@
 #uninstall gnuplot and reinstall it, but this time check the box
 #that adds gnuplot to your path variable
 
-echo "" > prime_gap_script.p
+echo -n "" > prime_gap_script.p
 
 echo "set terminal png size 800,800" >> prime_gap_script.p
 echo "set output 'primegaps.png'" >> prime_gap_script.p
