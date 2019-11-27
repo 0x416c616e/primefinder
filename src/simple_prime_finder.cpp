@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -13,9 +14,11 @@ bool numIsPrime(unsigned long long argNum){
 
 int main() {
 	//finds primes in the first 10,000 positive natural numbers
-	for (unsigned long long i = 3; i < 10000; i++) {
+	ofstream outputFile;
+	outputFile.open("output.dat");
+	for (unsigned long long i = 3; i < 100000; i++) {
 		if (numIsPrime(i)) {
-			cout << i << " is prime" << endl;
+			outputFile << i << endl;
 		}
 	}
 	return 0;
