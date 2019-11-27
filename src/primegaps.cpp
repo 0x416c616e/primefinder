@@ -17,11 +17,6 @@ bool numIsPrime(unsigned long long argNum){
     return true;
 }
 
-void aMillionDigits(){
-	//put stuff from main here
-	//so that later I can have it all loop
-}
-
 int main() {
 
 	//this determines how many results to put into one file
@@ -30,7 +25,6 @@ int main() {
 	//but ceiling changes based on how many previous runs
 	//have been done
     unsigned long long ceiling = sizeOfFile;
-
 
 	auto startingTime = chrono::system_clock::now();
     time_t startTimeValue = chrono::system_clock::to_time_t(startingTime);

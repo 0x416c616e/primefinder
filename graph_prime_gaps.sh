@@ -40,8 +40,9 @@ do
 	then
 		FILENAME+=", \\"
 	fi
-	echo $FILENAME
 	echo $FILENAME >> prime_gap_script.p
 done
 
 gnuplot prime_gap_script.p
+
+echo "Saved new graph to primegaps.png"
