@@ -230,7 +230,6 @@ int main() {
         auto endingTime = chrono::system_clock::now();
         time_t endTimeValue = chrono::system_clock::to_time_t(endingTime);
         cout << "Finished at: " << ctime(&endTimeValue);
-        cout << "----------------------------------------" << endl;
 
     } else {
         cout << "error: missing file" << endl;

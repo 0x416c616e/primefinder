@@ -11,7 +11,7 @@ echo -n "" > $FILENAME
 if [ $COUNT -le 0 ]
 then
 	#if there is insufficient data, it can't be graphed
-	echo "error" >> $FILENAME
+	echo "error" > $FILENAME
 	exit 1
 fi
 
@@ -36,4 +36,4 @@ do
 done
 
 #mark that a prime distribution file has been created
-echo "true" >> distribution_graphed.txt
+echo "true" > distribution_graphed.txt

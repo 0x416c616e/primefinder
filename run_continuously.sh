@@ -3,6 +3,8 @@
 #you might have to change it slightly for linux or macOS because this was made for Windows
 while :
 do
+	echo "---------------------------------------------"
+	echo "---------------------------------------------"
 	MESSAGE="HOLD ctrl+c DOWN for a few seconds if you want to quit"
 	echo $MESSAGE
 	echo "Running prime gap 50k run..."
@@ -13,8 +15,13 @@ do
 	./graph_prime_gaps.sh
 	echo "Finished graphing prime gaps."
 	echo $MESSAGE
-	echo "Finding and graphing prime number distribution..."
+	echo "Finding prime number distribution..."
+	./prime_distribution.sh
+	echo "Done finding prime number distribution."
+	echo $MESSAGE
+	echo "Graphing prime number distribution..."
 	./graph_prime_distribution.sh
-	echo "Finished finding and graphing prime number distribution."
+	echo "Finished graphing prime number distribution."
+	echo $MESSAGE
 	sleep 1
 done
