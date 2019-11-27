@@ -31,3 +31,9 @@ Make sure you do chmod +x for all of the shell scripts and the executable.
 ## macOS and Linux
 
 If you're on macOS or Linux, then compile the primegaps.cpp file within the src folder. The compiled executable will need to be in into the main project folder, such as primefinder.
+
+## Simplified prime finder
+
+A simpler prime-finding program is simple_prime_finder.exe, which only finds primes for the first 100,000 positive natural numbers and then saves them to a file called output.dat. It's much faster for finding primes than the main program, but that's because all it's doing is finding primes, not prime differences, graphing, etc.
+
+
