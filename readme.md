@@ -2,6 +2,10 @@
 
 This project can find and graph prime numbers, gaps between successive prime numbers, and how frequently primes occur. It was written in C++, Bash, and gnuplot script.
 
+![prime gap graph](https://github.com/0x416c616e/primefinder/blob/master/primegaps.png "Prime Gap Graph")
+![prime distribution graph](https://github.com/0x416c616e/primefinder/blob/master/primedistribution.png "Prime Distribution Graph")
+
+
 This program uses "checkpoints" which mean that it periodically saves its state to files on your hard drive or SSD, but it doesn't do it too often, because that would cause wear and tear on your hardware, not to mention it would make the program slower. So I currently have it set so that it will do 50k iterations, then save its status.
 
 ## How to run it 
