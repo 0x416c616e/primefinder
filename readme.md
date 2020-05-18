@@ -12,6 +12,10 @@ This program uses "checkpoints" which mean that it periodically saves its state 
 
 Here's how to run this program:
 
+Firstly, you will need to compile the `src/primegaps.cpp` file and then put it in the main directory.
+
+Then run this:
+
     ./run_continuously.sh
 
 The output files will be prime_distribution.dat and gaps_0.dat, gaps_1.dat, gaps_2.dat, and so on.
